@@ -32,7 +32,7 @@ description: A股每日复盘工作流——涵盖盘前观察清单制定、盘
    - 入场条件是否接近触发（接近触发时主动提醒用户）
    - 已持仓计划的前提是否还成立（市场方向是否发生重大变化）
    - 失效条件是否已被触发
-4. 制定观察清单和盘前预测，写入本地文件（`30-Resources/盘前预测/`）
+4. 制定观察清单和盘前预测，写入本地文件（`30-Resources/交易体系/盘前预测/`）
 
 **交易计划审查输出**：
 ```markdown
@@ -135,7 +135,7 @@ $url = "https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=20&po=1&np=1&fltt=2
 > 早盘验证写入前日复盘，形成"预期-验证"闭环。当日复盘在收盘后创建，因为早盘仍有反转不确定性。
 
 **复盘后交易计划审查**：
-1. 读取 `30-Resources/交易计划/` 下所有状态非"已完成"或"已失效"的计划
+1. 读取 `30-Resources/交易体系/交易计划/` 下所有状态非"已完成"或"已失效"的计划
 2. 对照当日复盘结论，检查计划的"决策依据"是否仍成立
 3. 检查"失效条件"是否已被触发
 4. 更新计划的审查记录：
@@ -263,7 +263,7 @@ https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&fields=f62,f184,f12,f14&s
 
 ## Notion集成（可选同步）
 
-**当前模式**：以本地文件为主（`30-Resources/盘前预测/`），Notion作为可选同步目标。
+**当前模式**：以本地文件为主（`30-Resources/交易体系/盘前预测/`），Notion作为可选同步目标。
 
 **Token**：存储在项目MEMORY.md中（Notion API token）
 
@@ -293,9 +293,10 @@ $webclient.UploadString("https://api.notion.com/v1/blocks/{block_id}/children", 
 
 **文件结构**：
 ```
-30-Resources/
+30-Resources/交易体系/
 ├── 每日复盘/
 │   ├── YYYY-MM-DD 每日复盘.md
+│   ├── 交易决策框架.md
 │   └── 模板/
 │       └── 每日复盘编写指导.md
 ├── 盘前预测/
