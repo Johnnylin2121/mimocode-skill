@@ -162,6 +162,15 @@ Get-Date -Format "yyyy-MM-dd dddd"
    - 前提不成立 → 标记计划失效，移入归档
 5. 如有新建交易计划的需求（观察清单中出现新机会），提醒用户
 
+**复盘后归档检查**：
+创建当日复盘文件后，检查 `交易体系/每日复盘/` 目录，将超过前两个交易日的复盘文件移入 `存档/` 子目录。主目录仅保留今日、前日、前前日三个交易日的复盘文件。
+```powershell
+# 获取目录中所有复盘文件，按日期排序
+Get-ChildItem "D:\OneDrive\ObsidianVault\交易体系\每日复盘\*.md" | Sort-Object Name
+# 将早于前前日的文件移入存档
+Move-Item "D:\OneDrive\ObsidianVault\交易体系\每日复盘\YYYY-MM-DD 每日复盘.md" "D:\OneDrive\ObsidianVault\交易体系\每日复盘\存档\"
+```
+
 **复盘文件位置**：
 `D:\OneDrive\ObsidianVault\30-Resources\每日复盘\YYYY-MM-DD 每日复盘.md`
 
