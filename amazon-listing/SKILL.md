@@ -11,16 +11,29 @@ description: >
 
 # Amazon Listing Optimization Workflow
 
+## Table of Contents
+- [Overview](#overview)
+- [Amazon Listing Rules](#amazon-listing-rules)
+- [Step 0 — Confirm Target Marketplace](#step-0--confirm-target-marketplace)
+- [Step 0.5 — Obtain Product Images](#step-05--obtain-product-images-mandatory)
+- [Step 1 — Extract Core Keywords](#step-1--extract-core-keywords-semantically-meaningful-phrases)
+- [Step 2 — Write Title & Bullet Points](#step-2--write-title--bullet-points)
+- [Step 3 — Generate Backend Search Terms](#step-3--generate-backend-search-terms)
+- [Notes](#notes)
+
 ## Overview
 
-Four-step workflow for Amazon listing creation from competitor analysis:
+Five-step workflow for Amazon listing creation from competitor analysis:
 
 **Step 0** — Confirm target marketplace
-**Step 1** — Crawl competitor listings, extract top 10 core keywords
+**Step 0.5** — Obtain product images (CRITICAL for accurate keyword analysis)
+**Step 1** — Crawl competitor listings, extract core keywords (semantically meaningful phrases)
 **Step 2** — Write title + 5 bullet points with keyword embedding
 **Step 3** — Generate backend search terms
 
 The user expects a **single unified `.md` file** on their desktop at the end of each step (progressively built), with 4 sections. Pause at the end of each step for user review before continuing.
+
+---
 
 ## Amazon Listing Rules (Hardcoded)
 
@@ -66,16 +79,110 @@ These constraints are non-negotiable and must be applied at every step.
 
 Ask the user which marketplace (site) they intend to list on. If the user does not specify, default to the marketplace of the competitor links they provide.
 
-Examples: `Amazon.com` (US), `Amazon.co.uk` (UK), `Amazon.de` (Germany), `Amazon.co.jp` (Japan), `Amazon.ca` (Canada), `Amazon.fr` (France), `Amazon.es` (Spain), `Amazon.it` (Italy), `Amazon.com.au` (Australia)
+Examples: `Amazon.com` (US), `Amazon.co.uk` (UK), `Amazon.de` (Germany), `Amazon.co.jp` (Japan), `Amazon.ca` (Canada), `Amazon.fr` (France), `Amazon.es` (Spain), `Amazon.it` (Italy), `Amazon.com.au` (Australia), `Amazon.com.mx` (Mexico)
 
-Once confirmed, proceed to Step 1.
+Once confirmed, proceed to Step 0.5.
 
 ---
 
-## Step 1 — Extract Top 10 Core Keywords
+## Step 0.5 — Obtain Product Images (MANDATORY)
+
+**This step is MANDATORY before proceeding to keyword analysis.**
+
+### Why Images Are Critical
+
+Product images reveal the **actual specifications** that determine which keywords are applicable:
+- Port types and counts (USB 3.2, USB 3.0, USB-C, USB-A)
+- Power specifications (45W, 65W, adapter type)
+- Material (aluminum, plastic)
+- Design features (ergonomic, compact)
+- Included accessories (cables, adapters)
+
+**Without images, you risk:**
+- Extracting keywords for features the product doesn't have
+- Missing the product's actual differentiators
+- Creating listings that don't match the real product
+
+### How to Obtain Images
+
+**Option 1: User provides images directly**
+- Ask user to share product images (main image + detail images)
+- Look for a folder path or uploaded images
+- Example: `C:\Users\johnn\Desktop\Product-Name\主图\`
+
+**Option 2: User provides product folder path**
+- If user has a product folder with images, read all images from that folder
+- Analyze each image to extract product specifications
+
+**Option 3: No images available**
+- If user explicitly says they have no images, proceed with specs only
+- Ask user to provide detailed product specifications in text form
+- Warn that keyword analysis may be less accurate without visual confirmation
+
+### Image Analysis Process
+
+For each product image, extract:
+1. **Port configuration**: Number and types of ports (USB 3.2, 3.0, 2.0, USB-C, USB-A)
+2. **Power specifications**: Adapter wattage, PD support, fast charging
+3. **Material**: Aluminum, plastic, etc.
+4. **Design**: Ergonomic, compact, color
+5. **Cables/accessories**: Included cables, adapters
+6. **Text on product**: Any labels, specifications visible
+
+### Output: Product Specifications Summary
+
+After analyzing images, create a **Product Specifications Summary**:
+
+```markdown
+### Product Specifications (from Image Analysis)
+- **Type**: [e.g., USB 3.2 HUB]
+- **Port Count**: [e.g., 9-IN-1]
+- **Port Configuration**:
+  - USB C 3.2: 10Gbps (45W PD Fast Charging)
+  - USB A 3.2: 10Gbps
+  - USB A 3.0: 5Gbps
+  - USB A 2.0: 480Mbps
+- **Power**: [e.g., 65W adapter, 45W PD]
+- **Material**: [e.g., Aluminum]
+- **Color**: [e.g., Gray]
+- **Cable**: [e.g., 2-IN-1 USB C & USB A]
+- **Key Features**: [list differentiators]
+```
+
+Once complete, proceed to Step 1.
+
+---
+
+## Step 1 — Extract Core Keywords (Semantically Meaningful Phrases)
 
 ### Input
-User provides 1–5 Amazon competitor ASINs or full product URLs (all same marketplace as Step 0).
+- **Product Specifications** (from Step 0.5 image analysis)
+- User provides 1–5 Amazon competitor ASINs or full product URLs (all same marketplace as Step 0)
+
+---
+
+### ⚠️ CRITICAL: Keyword Analysis Philosophy
+
+**Keywords must be SEMANTICALLY MEANINGFUL SEARCH PHRASES, not isolated high-frequency words.**
+
+❌ **Wrong approach** (isolated words):
+- "usb" - too vague, no clear intent
+- "puertos" - just means "ports", not specific
+- "alimentación" - just means "power", not specific
+- "aluminio" - just means "aluminum", not specific
+
+✅ **Correct approach** (meaningful phrases):
+- "hub usb 3.2" - clear product type + specification
+- "concentrador usb alimentado" - clear product type + feature
+- "hub usb para laptop" - clear product type + use case
+- "adaptador usb c" - clear product type + interface
+
+**Why this matters:**
+- Users don't search for "usb" - they search for "hub usb 3.2" or "concentrador usb"
+- Isolated words attract unqualified traffic
+- Meaningful phrases attract buyers who know what they want
+
+---
 
 ### Crawling Methodology
 
@@ -100,39 +207,62 @@ The scraper should extract:
 
 **Fallback**: If browser automation fails (CAPTCHA, blocking), ask the user to manually copy-paste the title and bullet points for each competitor. Do NOT loop indefinitely retrying.
 
+---
+
 ### Keyword Analysis Methodology
 
-After obtaining all competitor texts, perform analysis:
+**Core Principle**: Extract **semantically meaningful search phrases** that:
+1. Appear frequently in competitor titles (high search volume)
+2. Match the product's actual specifications (from Step 0.5)
+3. Are specific enough to attract qualified buyers
 
-1. **Collect raw text**: All titles and bullets from all competitors.
+#### Phase 1: Extract Complete Phrases from Competitor Titles
 
-2. **Clean**:
-   - **EXCLUDE** brand words and store/seller names (user confirms which words are brand names if unsure; default to removing the first word(s) of each title that match across competitors as likely brand)
-   - **DO NOT exclude** stop words (e.g. "for", "with", "and", "in", "on", "the", "a", "an"). These are part of natural search phrases.
-   - Remove punctuation/symbols, normalize to lowercase for counting
-   - Normalize unicode (full-width to half-width etc.)
+**DO NOT** extract isolated words. Instead, extract **complete phrases** that appear in competitor titles:
 
-3. **Word frequency analysis**:
-   - Count occurrences of every word (1-gram) across all titles AND across all bullets
-   - Count occurrences of every 2-word phrase (2-gram) across all titles (higher weight for 2-grams that appear in titles)
-   - Count occurrences of every 3-word phrase (3-gram) that appears at least once in a title
+From each competitor title, identify:
+- **Product type phrases**: "hub usb", "concentrador usb", "adaptador usb"
+- **Specification phrases**: "usb 3.2", "usb 3.0", "10 gbps", "5 gbps"
+- **Feature phrases**: "alimentado", "con fuente de alimentación", "aluminio"
+- **Use case phrases**: "para pc", "para portátil", "para mac"
+- **Port phrases**: "7 puertos", "puertos usb", "usb c", "usb a"
 
-4. **Title weight boost** (position-weighted scoring):
-   - Words appearing in a competitor **title** get a **3× weight multiplier** vs words only in bullets
-   - Within a title, words appearing earlier get a small additional boost (first 3 positions: 1.2×, positions 4–6: 1.1×)
-   - A word/phrase appearing in 3+ competitor titles → strong core keyword candidate
+#### Phase 2: Count Phrase Frequency
 
-5. **Merge same-root words**:
-   - Group morphological variants (e.g. "charger", "charging", "charge") under the highest-frequency form as the primary keyword
-   - List variants below the primary keyword in output as sub-items
-   - The primary form counts toward the top-10 slot; variants are informational
+Count how many competitor titles contain each phrase:
+- Phrase appearing in 5/5 competitors = very high search volume
+- Phrase appearing in 3/5 competitors = moderate search volume
+- Phrase appearing in 1/5 competitors = low search volume
 
-6. **Score formula** (approximate):
-   ```
-   keyword_score = (count_in_titles × 3) + (count_in_bullets × 1) + (cross_competitor_bonus: +2 per additional competitor) + (title_position_bonus: +0.2 to +0.4)
-   ```
+#### Phase 3: Match with Product Specifications
 
-7. **Select top 10**: Rank by score descending. These are the **core keywords**.
+For each phrase, check if it matches the product's actual specifications (from Step 0.5):
+
+**Matching Rules:**
+| Phrase | Match if product has... |
+|--------|-------------------------|
+| "usb 3.2" | USB 3.2 ports |
+| "usb 3.0" | USB 3.0 ports |
+| "hub alimentado" | External power adapter |
+| "aluminio" | Aluminum material |
+| "pd 45w" | 45W PD charging |
+| "7 puertos" | 7+ ports (adjust for actual count) |
+| "usb c" | USB-C ports |
+| "para mac" | Mac compatibility |
+
+**Scoring:**
+- Phrase appears in competitor titles = Traffic Score (1-5)
+- Phrase matches product specs = Match Score (0-5)
+- **Final Score = Traffic Score × (1 + Match Score × 0.5)**
+
+#### Phase 4: Filter and Rank
+
+1. **Remove non-matching phrases**: Phrases that don't match product specs get Score = 0
+2. **Remove isolated words**: Any single word without clear meaning gets excluded
+3. **Rank by Final Score**: Higher score = better keyword
+4. **Select top 10-15 phrases**: These are the core keywords
+
+---
 
 ### Output (Section 1 of the .md file)
 
@@ -143,20 +273,35 @@ Format:
 ```markdown
 # Amazon Listing — [Product Name] — [Marketplace]
 
-## 1. Core Keywords (Top 10)
+## 1. Core Keywords (Semantically Meaningful Phrases)
 
-| Rank | Keyword | Score | Title Count | Bullet Count | Cross-Competitor |
-|------|---------|-------|-------------|--------------|------------------|
-| 1    | ...     | ...   | ...         | ...          | ...              |
-| 2    | ...     | ...   | ...         | ...          | ...              |
-| ...  | ...     | ...   | ...         | ...          | ...              |
+**Analysis Method**: Competitor title phrases × Product specification match = Core keywords
 
-### Variants (same-root words merged under primary keyword)
+| Rank | Keyword Phrase | Final Score | Traffic | Match | Matched Specs |
+|------|----------------|-------------|---------|-------|---------------|
+| 1    | hub usb        | 15          | 5       | 4     | Product type  |
+| 2    | usb 3.2        | 11          | 3       | 5     | Specification |
+| ...  | ...            | ...         | ...     | ...   | ...           |
 
-| Primary | Variants |
-|---------|----------|
-| charger | charging, charge |
-| ...     | ...      |
+### Keyword Categories
+
+**A类产品类型词（必须包含）**：
+1. [phrase] - [reason]
+2. [phrase] - [reason]
+
+**B类差异化特性词（竞争优势）**：
+1. [phrase] - [reason]
+2. [phrase] - [reason]
+
+**C类兼容性/场景词**：
+1. [phrase] - [reason]
+
+### Product Specifications (from Image Analysis)
+- **Type**: [product type]
+- **Ports**: [port configuration]
+- **Power**: [power specs]
+- **Material**: [material]
+- **Key Features**: [differentiators]
 
 ### Competitor Links Analyzed
 - [link 1]
@@ -200,6 +345,25 @@ After output, **STOP and ask the user to review/confirm** the keywords. Do NOT p
 
 4. **Natural language priority**: NEVER sacrifice readability for keyword density. If a keyword feels forced, drop it rather than creating unnatural copy.
 
+### Keyword Embedding Example
+
+**Core Keywords:**
+1. hub usb (Score: 15)
+2. usb 3.2 (Score: 11)
+3. concentrador usb (Score: 12)
+4. alimentado (Score: 15)
+5. usb c (Score: 10)
+
+**Title:**
+> Hub USB 3.2 Alimentado 9 Puertos, Concentrador USB con 65W Fuente de Alimentación, 10Gbps USB C y USB A para PC Portátil Mac, Aluminio Gris
+
+**Keywords in Title:**
+- ✅ hub usb (Rank 1)
+- ✅ usb 3.2 (Rank 2)
+- ✅ concentrador usb (Rank 3)
+- ✅ alimentado (Rank 4)
+- ✅ usb c (Rank 5)
+
 ### Localization
 
 Adapt the listing copy to the target marketplace's native language:
@@ -213,6 +377,7 @@ Adapt the listing copy to the target marketplace's native language:
 | .ca | English (or French for QC) | Similar to US English |
 | .fr | French | Formal, elegant, feature-focused |
 | .es | Spanish | Warm, benefit-driven |
+| .com.mx | Mexican Spanish | Similar to .es but with Mexican vocabulary and expressions |
 | .it | Italian | Stylish, design-conscious |
 | .com.au | Australian English | Similar to UK English with AU spelling |
 
@@ -277,6 +442,16 @@ After output, **STOP and ask the user to review/confirm** the title and bullets.
    - Prioritize: synonyms > misspellings > alternate-language > complementary > low-priority long-tail
    - Truncate to ≤ 249 **bytes** (check byte length, not character length)
    - Don't pad with filler — only meaningful terms
+
+### Backend Search Terms Example
+
+**Exclusion set (words already in listing):**
+hub, usb, alimentado, puertos, concentrador, 65w, fuente, aluminio, gris, 3.2, 3.0, 2.0, gbps, pd, 45w, carga, rapida, cable, computadora, portatil, mac, steam, deck, host, plug, play, diseno, ergonomico, carcasa, calidad, calor, pasiva, escritorio, compacto, ligero, oficina, hogar, viajes
+
+**Generated backend search terms:**
+> hub usb 3.2 concentrador usb 3.2 adaptador usb hub splitter usb divisor usb disco duro externo mouse usb teclado usb hub para laptop concentrador para mac adaptador para pc hub usb 10gbps hub usb c alimentado
+
+**Byte count**: 246 / 249
 
 ### Output (Section 3 of the .md file)
 
